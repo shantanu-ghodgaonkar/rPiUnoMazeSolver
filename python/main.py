@@ -1,5 +1,8 @@
 import serial
-
-ser = serial.Serial('/dev/ttyACM0', 115200);
+arduino = '/dev/serial/by-id/usb-Arduino__www.arduino.cc__0043_24238313635351F0A162-if00'
+baudrate = 115200
+ser = serial.Serial(arduino, baudrate);
 while 1:
-    ser.readline()
+    #print(ser.readline())
+    count = input("How many times should the LED blink? ")
+    ser.write(count.encode('ascii'))
