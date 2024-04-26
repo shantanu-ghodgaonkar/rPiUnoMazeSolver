@@ -14,22 +14,28 @@ void rotateServo(unsigned int servoDir){
     // Case to bring both servos to home location
     case 48:  servoBot.write(servoHomeAngle);
               servoTop.write(servoHomeAngle);
+              Serial.println("Bringing both servos to home location");
               break;
     // Case to rotate the bottom servo by 15 degrees clockwise
     case 49:  servoBot.write(servoHomeAngle-servoRotAngle);
+              Serial.println("Rotating the bottom servo by 15 degrees clockwise");
               break;
     // Case to rotate the bottom servo by 15 degrees counterclockwise
     case 50:  servoBot.write(servoHomeAngle+servoRotAngle);
+              Serial.println("Rotating the bottom servo by 15 degrees counterclockwise");
               break;
     // Case to rotate the top servo by 15 degrees clockwise
     case 51:  servoTop.write(servoHomeAngle-servoRotAngle);
+              Serial.println("Rotating the top servo by 15 degrees clockwise");
               break;
     // Case to rotate the top servo by 15 degrees counterclockwise
     case 52:  servoTop.write(servoHomeAngle+servoRotAngle);
+              Serial.println("Rotating the top servo by 15 degrees counterclockwise");
               break;
     // Default case to bring both servos to home angle
     default:  servoBot.write(servoHomeAngle);
               servoTop.write(servoHomeAngle);
+              Serial.println("Bringing both servos to home location");
               break;
   }
 }
