@@ -15,9 +15,10 @@ if __name__ == "__main__":
     camera.exposure_mode = 'auto'
     camera.meter_mode = 'average'
     camera.image_effect = 'none'
+    imagePath = Path.joinpath(Path(__file__).parent.resolve(), 'img', 'capture.jpg')
     while 1:
         camera.start_preview()
-        camera.capture(Path.joinpath(Path(__file__).parent.resolve(), 'img', 'capture.jpg'))
+        camera.capture(imagePath)
         # print(ser.readline())
         count = input("How to turn the servo? ")
         ser.write(count.encode('ascii'))
