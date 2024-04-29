@@ -8,7 +8,7 @@ baudrate = 115200
 camera = PiCamera()
 
 if __name__ == "__main__":
-    ser = serial.Serial(arduino, baudrate)
+#    ser = serial.Serial(arduino, baudrate)
     camera.resolution = (1280, 720)
     camera.exposure_compensation = 2
     camera.exposure_mode = 'auto'
