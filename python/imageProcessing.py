@@ -3,30 +3,63 @@ import numpy as np
 from matplotlib import pyplot as plt
 
 
-class imageProcessing:
+class Image_processing:
 
-    def __init__(self, imgPath: str):
-        img = cv.imread(imgPath,cv.IMREAD_COLOR) #Reading Image as BGR
+    def __init__(self, imgPath: str) -> None:
+        self.img = cv.imread(imgPath,cv.IMREAD_COLOR) #Reading Image as BGR
+        self.p_img = np.zeros((300,300,3), dtype=np.uint8)
+        self.edge_img = np.zeros((300,300,3), dtype=np.uint8)
 
-    def process_image
-b,g,r=cv.split(img) #Saved image is in RBG decomposing RGB
-img=cv.merge((r,g*0,b*0)) #Merging RGB as BGR and eliminating G and B components
-img=cv.addWeighted(img,2,img,0,0) #Increasing contrast
-img=cv.cvtColor(img,cv.COLOR_BGR2GRAY) #Converting to grayscale
-mask = cv.inRange(img, 100, 255);
-_,img = cv.threshold(img,20,255,cv.THRESH_BINARY) #Thresholding image to convert to BW
+    def process_image(self) -> None:
+        b,g,r=cv.split(self.img) #Saved image is in RBG decomposing RGB
+        self.p_img=cv.merge((r,g*0,b*0)) # type: ignore #Merging RGB as BGR and eliminating G and B components
+        self.p_img=cv.addWeighted(self.p_img,2,self.p_img,0,0) #Increasing contrast
+        self.p_img=cv.cvtColor(self.p_img,cv.COLOR_BGR2GRAY) #Converting to grayscale
+        mask = cv.inRange(self.p_img, 100, 255) # type: ignore
+        _,self.p_img = cv.threshold(self.p_img,20,255,cv.THRESH_BINARY) #Thresholding image to convert to BW
+        
+        kernel = np.ones((10,10),np.uint8) #Setting kernel for morphing
+        self.p_img = cv.morphologyEx(self.p_img, cv.MORPH_CLOSE, kernel) #Close morphing (Dilation followed by erosion eliminates black dots)
 
+        kernel = cv.getStructuringElement(cv.MORPH_ELLIPSE,(15,15)) #Setting kernel for morphing
+        #kernel = np.ones((10,10),np.uint8) #Setting kernel for morphing
+        self.p_img = cv.morphologyEx(self.p_img, cv.MORPH_OPEN, kernel)  #Open morphing (Erosion followed by Dilation eliminates white dots)
+    
+    def detect_edges(self) -> None:
+        self.edge_img = cv.Canny(self.p_img,0,255) #Canny edge detection
 
-kernel = np.ones((10,10),np.uint8) #Setting kernel for morphing
-img = cv.morphologyEx(img, cv.MORPH_CLOSE, kernel) #Close morphing (Dilation followed by erosion eliminates black dots)
+    def show_original_img(self) -> None:
+        plt.imshow(self.img)
+        plt.show()
 
-kernel = cv.getStructuringElement(cv.MORPH_ELLIPSE,(15,15)) #Setting kernel for morphing
-#kernel = np.ones((10,10),np.uint8) #Setting kernel for morphing
-img = cv.morphologyEx(img, cv.MORPH_OPEN, kernel)  #Open morphing (Erosion followed by Dilation eliminates white dots)
+    def show_processed_img(self) -> None:
+        plt.imshow(self.p_img)
+        plt.show()
 
-img = cv.Canny(img,0,255) #Canny edge detection
+    def resize_original_img(self, h:int, w:int) -> None:
+        self.img = cv.resize(self.img, (w, h))
 
+    def resize_processed_img(self, h:int, w:int) -> None:
+        self.img = cv.resize(self.img, (w, h))
 
-plt.imshow(img,'gray')
-plt.show()
+    def crop_original_img(self, h0:int, h1:int, w0:int, w1:int) -> None:
+        self.img = self.img[w0:w1, h0:h1]
 
+    def crop_processed_img(self, h0:int, h1:int, w0:int, w1:int) -> None:
+        self.p_img = self.p_img[w0:w1, h0:h1]
+
+    def rotate_original_img(self, angle:int) -> None:
+        rows, cols = self.img.shape
+        M = cv.getRotationMatrix2D((((cols-1)/2.0), ((rows-1)/2.0)), angle, 1)
+        self.img = cv.warpAffine(self.img, M, (cols,rows))
+    
+    def rotate_processed_img(self, angle:int) -> None:
+        rows, cols = self.p_img.shape
+        M = cv.getRotationMatrix2D((((cols-1)/2.0), ((rows-1)/2.0)), angle, 1)
+        self.p_img = cv.warpAffine(self.p_img, M, (cols,rows))
+
+    def get_original_img_array(self) -> np.ndarray:
+        return self.img
+    
+    def get_processed_img_array(self) -> np.ndarray:
+        return self.p_img
