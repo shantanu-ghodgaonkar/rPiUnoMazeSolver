@@ -24,6 +24,7 @@ class Image_processing:
         kernel = cv.getStructuringElement(cv.MORPH_ELLIPSE,(15,15)) #Setting kernel for morphing
         #kernel = np.ones((10,10),np.uint8) #Setting kernel for morphing
         self.p_img = cv.morphologyEx(self.p_img, cv.MORPH_OPEN, kernel)  #Open morphing (Erosion followed by Dilation eliminates white dots)
+        # print("DEBUG POINT")
     
     def detect_edges(self) -> None:
         self.edge_img = cv.Canny(self.p_img,0,255) #Canny edge detection
@@ -43,13 +44,13 @@ class Image_processing:
         self.img = cv.resize(self.img, (w, h))
 
     def crop_original_img(self, h0:int, h1:int, w0:int, w1:int) -> None:
-        self.img = self.img[w0:w1, h0:h1]
+        self.img = self.img[h0:h1, w0:w1]
 
     def crop_processed_img(self, h0:int, h1:int, w0:int, w1:int) -> None:
-        self.p_img = self.p_img[w0:w1, h0:h1]
+        self.p_img = self.p_img[h0:h1, w0:w1]
 
     def rotate_original_img(self, angle:int) -> None:
-        rows, cols = self.img.shape
+        rows, cols, _ = self.img.shape
         M = cv.getRotationMatrix2D((((cols-1)/2.0), ((rows-1)/2.0)), angle, 1)
         self.img = cv.warpAffine(self.img, M, (cols,rows))
     

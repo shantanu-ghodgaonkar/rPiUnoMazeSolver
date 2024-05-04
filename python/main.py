@@ -1,21 +1,30 @@
-import serial
-from time import sleep
+# import serial
+# from time import sleep
 from pathlib import Path
-from picamera2 import Picamera2, Preview
+# from piCameraCtrl import Camera
+from imageProcessing import Image_processing
 
-arduino = '/dev/serial/by-id/usb-Arduino__www.arduino.cc__0043_24238313635351F0A162-if00'
-baudrate = 115200
-camera = Picamera2()
+
+ARDUINO = '/dev/serial/by-id/usb-Arduino__www.arduino.cc__0043_24238313635351F0A162-if00'
+BAUDRATE = 115200
+IMAGEPATH = Path.joinpath(Path(__file__).parent.resolve(), 'img', 'maze_pic_1.jpg').__str__()
+
+
 
 if __name__ == "__main__":
 #    ser = serial.Serial(arduino, baudrate)
-    imagePath = Path.joinpath(Path(__file__).parent.resolve(), 'img', 'capture.jpg')
     
-    camera.configure(camera.create_preview_configuration()) # type: ignore
-    camera.start_preview(Preview.QTGL) # type: ignore
-    camera.start()
-    while 1: # Change condition to maze solved or not
-        camera.capture_file(imagePath)
+    imgProc = Image_processing(IMAGEPATH)
+    imgProc.rotate_original_img(-2.25)
+    imgProc.crop_original_img(73, 2020, 1502,3465)
+    # imgProc.show_original_img()
+    imgProc.process_image()
+    imgProc.show_processed_img()
+        
+    
+    
+    # while 1: # Change condition to maze solved or not
+        # camera.capture_file(imagePath)
     #     # print(ser.readline())
     #     count = input("How to turn the servo? ")
     #     ser.write(count.encode('ascii'))
