@@ -7,7 +7,7 @@ from imageProcessing import Image_processing
 
 ARDUINO = '/dev/serial/by-id/usb-Arduino__www.arduino.cc__0043_24238313635351F0A162-if00'
 BAUDRATE = 115200
-IMAGEPATH = Path.joinpath(Path(__file__).parent.resolve(), 'img', 'maze_pic_1.jpg').__str__()
+IMAGEPATH = Path.joinpath(Path(__file__).parent.resolve().parent.resolve(), 'img', 'maze_pic_1.jpg').__str__()
 
 
 
