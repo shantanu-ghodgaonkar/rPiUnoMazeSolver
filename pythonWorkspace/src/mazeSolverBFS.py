@@ -1,7 +1,7 @@
 import cv2
 from point import Point
 
-CELL_SIZE = 13
+CELL_SIZE = 20
 EMPTY_CELL = [255 for _ in range(CELL_SIZE)]
 GAP_THRESHOLD = CELL_SIZE - 5
 
@@ -26,40 +26,51 @@ class MazeSolverBFS:
         self.visited[self.start.y][self.start.x] = 1
         self.path = []
         # TODO: Calibrate this directions variable
-        self.directions = [Point(0, -(CELL_SIZE/2)), Point(0, (CELL_SIZE/2)),
-                           Point((CELL_SIZE/2), 0), Point(-(CELL_SIZE/2), 0)]
+        # self.directions = [Point(0, -(CELL_SIZE/2)), Point(0, (CELL_SIZE/2)),
+        #                    Point((CELL_SIZE/2), 0), Point(-(CELL_SIZE/2), 0)]
+        self.directions = [Point(0, -1), Point(0, 1),
+                           Point(1, 0), Point(-1, 0)]
 
     def find_end(self) -> None:
-        while i < self.img.shape[1]:
+        i = 0
+        endFound = False
+        while i < self.img.shape[0]:
             left_wall_white_px_count = sum(1 for element in (
                 self.img[i:i+CELL_SIZE, 0] == EMPTY_CELL) if element)
             right_wall_white_px_count = sum(1 for element in (
-                self.img[i:i+CELL_SIZE, self.img.shape[1]-1] == EMPTY_CELL) if element)
+                self.img[i:i+CELL_SIZE, self.img.shape[0]-1] == EMPTY_CELL) if element)
             up_wall_white_px_count = sum(1 for element in (
                 self.img[0, i:i+CELL_SIZE] == EMPTY_CELL) if element)
             down_wall_white_px_count = sum(1 for element in (
-                self.img[self.img.shape[1]-1, i:i+CELL_SIZE] == EMPTY_CELL) if element)
+                self.img[self.img.shape[0]-1, i:i+CELL_SIZE] == EMPTY_CELL) if element)
             if left_wall_white_px_count > GAP_THRESHOLD:
+                endFound = True
                 self.end = Point(0, i + int(CELL_SIZE/2))
                 print(f"Gap found at = ({self.end.x}, {self.end.y})")
                 break
             elif right_wall_white_px_count > GAP_THRESHOLD:
+                endFound = True
                 self.end = Point(299, i + int(CELL_SIZE/2))
                 print(f"Gap found at = ({self.end.x}, {self.end.y})")
                 break
             elif up_wall_white_px_count > GAP_THRESHOLD:
+                endFound = True
                 self.end = Point(i + int(CELL_SIZE/2), 0)
                 print(f"Gap found at = ({self.end.x}, {self.end.y})")
                 break
             elif down_wall_white_px_count > GAP_THRESHOLD:
+                endFound = True
                 self.end = Point(i + int(CELL_SIZE/2), 299)
                 print(f"Gap found at = ({self.end.x}, {self.end.y})")
                 break
             else:
-                print(f"Gap not found, please recalibrate parameters")
+                pass
             i += CELL_SIZE
+        if not endFound:
+            print(f"Gap not found, please recalibrate parameters")
 
     def solve_maze(self) -> list:
+        self.img = cv2.cvtColor(self.img, cv2.COLOR_GRAY2BGR)
         while len(self.queue) > 0:
             # popping one element from queue and storing in p
             p = self.queue.pop(0)
@@ -70,8 +81,9 @@ class MazeSolverBFS:
 
                 # if cell(a surrounding pixel) is in range of image, not visited, !(B==0 && G==0 && R==0) i.e. pixel is
                 # not black as black represents border
-                if (0 <= cell.x < w and 0 <= cell.y < h and
-                    self.visited[cell.y][cell.x] == 0 and
+                if (0 <= cell.x < self.w and 0 <= cell.y < self.h and
+                    self.visited[cell.y][cell.x] == 0
+                    and
                         (self.img[cell.y][cell.x][0] != 0 or self.img[cell.y][cell.x][1] != 0 or self.img[cell.y][cell.x][2] != 0)):
 
                     self.queue.append(cell)
@@ -86,13 +98,13 @@ class MazeSolverBFS:
 
                     # if end is found break
                     if cell == self.end:
-                        found = True
+                        self.found = True
                         del self.queue[:]
                         break
 
         # list to trace path
         self.path = []
-        if found:
+        if self.found:
             p = self.end
 
             while p != self.start:

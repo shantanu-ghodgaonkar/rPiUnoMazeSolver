@@ -6,9 +6,9 @@ class Point(object):
         object (object): This class is a child of the class "object"
     """
 
-    def __init__(self, x=0, y=0):
-        self.x = x
-        self.y = y
+    def __init__(self, x: int = 0, y: int = 0):
+        self.x = int(x)
+        self.y = int(y)
 
     def __add__(self, other):
 
