@@ -21,25 +21,23 @@ class ImageProcessing:
     def process_image(self) -> None:
         """_summary_
         """
-        # self.p_img = cv.cvtColor(self.img, cv.COLOR_BGR2HSV)
         b,g,r=cv.split(self.img) #Saved image is in RBG decomposing RGB
-        self.p_img=cv.merge((b*0,g*0,r*1)) #Merging RGB as BGR and eliminating G and B components
-        self.show_processed_img()
-        self.p_img=cv.addWeighted(self.p_img,1.5,self.p_img,0.0,0) #Increasing contrast
-        self.show_processed_img()
+        self.p_img=cv.merge((r,g*0,b*0)) #Merging RGB as BGR and eliminating G and B components
+        self.p_img=cv.addWeighted(self.p_img,2,self.p_img,0,0) #Increasing contrast
         self.p_img=cv.cvtColor(self.p_img,cv.COLOR_BGR2GRAY) #Converting to grayscale
         # mask = cv.inRange(self.p_img, 100, 255);
-        _,self.p_img = cv.threshold(self.p_img,35,255,cv.THRESH_BINARY) #Thresholding image to convert to BW
+        _,self.p_img = cv.threshold(self.p_img,20,255,cv.THRESH_BINARY) #Thresholding image to convert to BW
 
-        self.show_processed_img()
 
-        kernel = np.ones((5,5),np.uint8) #Setting kernel for morphing
+        kernel = np.ones((10,10),np.uint8) #Setting kernel for morphing
         self.p_img = cv.morphologyEx(self.p_img, cv.MORPH_CLOSE, kernel) #Close morphing (Dilation followed by erosion eliminates black dots)
 
-        kernel = cv.getStructuringElement(cv.MORPH_ELLIPSE,(5,5)) #Setting kernel for morphing
+        kernel = cv.getStructuringElement(cv.MORPH_ELLIPSE,(15,15)) #Setting kernel for morphing
         #kernel = np.ones((10,10),np.uint8) #Setting kernel for morphing
         self.p_img = cv.morphologyEx(self.p_img, cv.MORPH_OPEN, kernel)  #Open morphing (Erosion followed by Dilation eliminates white dots)
-        self.show_processed_img()
+
+
+
 
     def detect_edges(self) -> None:
         """_summary_
@@ -79,6 +77,16 @@ class ImageProcessing:
             fy (float): _description_
         """
         self.img = cv.resize(self.img, None, fx=fx,
+                             fy=fy, interpolation=cv.INTER_AREA)
+
+    def scale_processed_img(self, fx: float, fy: float) -> None:
+        """_summary_
+
+        Args:
+            fx (float): _description_
+            fy (float): _description_
+        """
+        self.p_img = cv.resize(self.p_img, None, fx=fx,
                              fy=fy, interpolation=cv.INTER_AREA)
 
     def resize_processed_img(self, h: int, w: int) -> None:
