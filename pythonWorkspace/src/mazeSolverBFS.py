@@ -118,7 +118,11 @@ class MazeSolverBFS:
         for p in self.path:
             self.img[p.y][p.x] = [255, 255, 255]
 
+    def get_img(self):
+        return self.img
+
     def show_img(self):
-        cv2.imshow("maze photo", self.img)
+        cv2.namedWindow("Maze Photo", cv2.WINDOW_NORMAL)
+        cv2.imshow("Maze Photo", self.img)
         cv2.waitKey(0)
         cv2.destroyAllWindows()

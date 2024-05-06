@@ -5,6 +5,8 @@ from pathlib import Path
 
 IMAGEPATH = Path.joinpath(Path(__file__).parent.resolve(
 ).parent.resolve(), 'img', 'capture.jpg').__str__()
+
+
 class Camera:
     def __init__(self) -> None:
         self.camera = camera = Picamera2()
@@ -26,7 +28,7 @@ class Camera:
 
     def getCamera(self) -> Picamera2:
         return self.camera
-    
+
     def stopPreview(self):
         self.camera.stop_preview()
 

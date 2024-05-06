@@ -21,23 +21,26 @@ class ImageProcessing:
     def process_image(self) -> None:
         """_summary_
         """
-        b,g,r=cv.split(self.img) #Saved image is in RBG decomposing RGB
-        self.p_img=cv.merge((r,g*0,b*0)) #Merging RGB as BGR and eliminating G and B components
-        self.p_img=cv.addWeighted(self.p_img,2,self.p_img,0,0) #Increasing contrast
-        self.p_img=cv.cvtColor(self.p_img,cv.COLOR_BGR2GRAY) #Converting to grayscale
+        b, g, r = cv.split(self.img)  # Saved image is in RBG decomposing RGB
+        # Merging RGB as BGR and eliminating G and B components
+        self.p_img = cv.merge((r, g*0, b*0))
+        self.p_img = cv.addWeighted(
+            self.p_img, 2, self.p_img, 0, 0)  # Increasing contrast
+        # Converting to grayscale
+        self.p_img = cv.cvtColor(self.p_img, cv.COLOR_BGR2GRAY)
         # mask = cv.inRange(self.p_img, 100, 255);
-        _,self.p_img = cv.threshold(self.p_img,20,255,cv.THRESH_BINARY) #Thresholding image to convert to BW
+        # Thresholding image to convert to BW
+        _, self.p_img = cv.threshold(self.p_img, 20, 255, cv.THRESH_BINARY)
 
+        kernel = np.ones((10, 10), np.uint8)  # Setting kernel for morphing
+        # Close morphing (Dilation followed by erosion eliminates black dots)
+        self.p_img = cv.morphologyEx(self.p_img, cv.MORPH_CLOSE, kernel)
 
-        kernel = np.ones((10,10),np.uint8) #Setting kernel for morphing
-        self.p_img = cv.morphologyEx(self.p_img, cv.MORPH_CLOSE, kernel) #Close morphing (Dilation followed by erosion eliminates black dots)
-
-        kernel = cv.getStructuringElement(cv.MORPH_ELLIPSE,(15,15)) #Setting kernel for morphing
-        #kernel = np.ones((10,10),np.uint8) #Setting kernel for morphing
-        self.p_img = cv.morphologyEx(self.p_img, cv.MORPH_OPEN, kernel)  #Open morphing (Erosion followed by Dilation eliminates white dots)
-
-
-
+        kernel = cv.getStructuringElement(
+            cv.MORPH_ELLIPSE, (15, 15))  # Setting kernel for morphing
+        # kernel = np.ones((10,10),np.uint8) #Setting kernel for morphing
+        # Open morphing (Erosion followed by Dilation eliminates white dots)
+        self.p_img = cv.morphologyEx(self.p_img, cv.MORPH_OPEN, kernel)
 
     def detect_edges(self) -> None:
         """_summary_
@@ -87,7 +90,7 @@ class ImageProcessing:
             fy (float): _description_
         """
         self.p_img = cv.resize(self.p_img, None, fx=fx,
-                             fy=fy, interpolation=cv.INTER_AREA)
+                               fy=fy, interpolation=cv.INTER_AREA)
 
     def resize_processed_img(self, h: int, w: int) -> None:
         """_summary_
@@ -173,4 +176,3 @@ class ImageProcessing:
         ignore_mask_color = (255,)*channel_count
         cv.fillPoly(mask, roi_corners, ignore_mask_color)
         self.img = cv.bitwise_and(self.img, mask)
-        
