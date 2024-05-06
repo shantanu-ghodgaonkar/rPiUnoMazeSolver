@@ -21,14 +21,15 @@ class ImageProcessing:
     def process_image(self) -> None:
         """_summary_
         """
-        self.p_img = cv.cvtColor(self.img, cv.COLOR_BGR2HSV)
-        b,g,r=cv.split(self.p_img) #Saved image is in RBG decomposing RGB
-        self.p_img=cv.merge((r*0,g*1,b*0)) #Merging RGB as BGR and eliminating G and B components
+        # self.p_img = cv.cvtColor(self.img, cv.COLOR_BGR2HSV)
+        b,g,r=cv.split(self.img) #Saved image is in RBG decomposing RGB
+        self.p_img=cv.merge((b*0,g*0,r*1)) #Merging RGB as BGR and eliminating G and B components
         self.show_processed_img()
-        self.p_img=cv.addWeighted(self.p_img,0.5,self.p_img,0.0,0) #Increasing contrast
+        self.p_img=cv.addWeighted(self.p_img,1.5,self.p_img,0.0,0) #Increasing contrast
+        self.show_processed_img()
         self.p_img=cv.cvtColor(self.p_img,cv.COLOR_BGR2GRAY) #Converting to grayscale
-        mask = cv.inRange(self.p_img, 100, 255);
-        _,self.p_img = cv.threshold(self.p_img,20,255,cv.THRESH_BINARY) #Thresholding image to convert to BW
+        # mask = cv.inRange(self.p_img, 100, 255);
+        _,self.p_img = cv.threshold(self.p_img,35,255,cv.THRESH_BINARY) #Thresholding image to convert to BW
 
         self.show_processed_img()
 
