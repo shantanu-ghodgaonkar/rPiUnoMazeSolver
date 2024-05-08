@@ -11,19 +11,21 @@ class BallDetector:
         self.start = Point()
         self.rad = 0.0
 
-    def detectBall(self):
-        b, g, r = cv2.split(self.img)  # Saved image is in RBG decomposing RGB
-        # Merging RGB as BGR and eliminating G and B components
-        img_rgb = cv2.merge((r, g, b))
-        img_1 = cv2.addWeighted(img_rgb, 10, self.img,
-                                0, 0)  # Increasing contrast
-        # Converting to grayscale
-        gray = cv2.cvtColor(img_1, cv2.COLOR_BGR2GRAY)
+    def detectBall(self) -> bool:
+        img_1 = cv2.addWeighted(self.img, 9, self.img, 0, 0)
+        b_s, g_s, r_s = cv2.split(img_1)
+        img_1 = cv2.merge((r_s*0, g_s, b_s))
+        # self.show_img_2(img_1)
+        gray = cv2.cvtColor(img_1, cv2.COLOR_BGR2GRAY)  # Converting to grayscale
         gray = cv2.blur(gray, (9, 9))  # Adding Gaussian blur
 
         self.detected_circles = cv2.HoughCircles(gray,
-                                                 cv2.HOUGH_GRADIENT, 1.8, 150, param1=20,
-                                                 param2=80, minRadius=15, maxRadius=40)
+                                        cv2.HOUGH_GRADIENT, 1.9, 20, param1=60,
+                                        param2=60, minRadius=12, maxRadius=30)
+        if self.detected_circles is not None:
+            return True
+        else:
+            return False
 
         # print("DEBUG POINT")
 

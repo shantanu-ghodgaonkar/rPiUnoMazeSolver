@@ -1,7 +1,7 @@
 import cv2
 from point import Point
 
-CELL_SIZE = 20
+CELL_SIZE = 15
 EMPTY_CELL = [255 for _ in range(CELL_SIZE)]
 GAP_THRESHOLD = CELL_SIZE - 5
 
@@ -31,18 +31,21 @@ class MazeSolverBFS:
         self.directions = [Point(0, -1), Point(0, 1),
                            Point(1, 0), Point(-1, 0)]
 
+    def set_end(self, end):
+        self.end = end
+
     def find_end(self) -> None:
         i = 0
         endFound = False
-        while i < self.img.shape[0]:
+        while i < self.img.shape[1]:
             left_wall_white_px_count = sum(1 for element in (
                 self.img[i:i+CELL_SIZE, 0] == EMPTY_CELL) if element)
             right_wall_white_px_count = sum(1 for element in (
-                self.img[i:i+CELL_SIZE, self.img.shape[0]-1] == EMPTY_CELL) if element)
+                self.img[i:i+CELL_SIZE, -1] == EMPTY_CELL) if element)
             up_wall_white_px_count = sum(1 for element in (
                 self.img[0, i:i+CELL_SIZE] == EMPTY_CELL) if element)
             down_wall_white_px_count = sum(1 for element in (
-                self.img[self.img.shape[0]-1, i:i+CELL_SIZE] == EMPTY_CELL) if element)
+                self.img[-1, i:i+CELL_SIZE] == EMPTY_CELL) if element)
             if left_wall_white_px_count > GAP_THRESHOLD:
                 endFound = True
                 self.end = Point(0, i + int(CELL_SIZE/2))
@@ -50,7 +53,7 @@ class MazeSolverBFS:
                 break
             elif right_wall_white_px_count > GAP_THRESHOLD:
                 endFound = True
-                self.end = Point(299, i + int(CELL_SIZE/2))
+                self.end = Point(self.img.shape[0]-1, i + int(CELL_SIZE/2))
                 print(f"Gap found at = ({self.end.x}, {self.end.y})")
                 break
             elif up_wall_white_px_count > GAP_THRESHOLD:
@@ -60,7 +63,7 @@ class MazeSolverBFS:
                 break
             elif down_wall_white_px_count > GAP_THRESHOLD:
                 endFound = True
-                self.end = Point(i + int(CELL_SIZE/2), 299)
+                self.end = Point(i + int(CELL_SIZE/2), self.img.shape[1]-1)
                 print(f"Gap found at = ({self.end.x}, {self.end.y})")
                 break
             else:

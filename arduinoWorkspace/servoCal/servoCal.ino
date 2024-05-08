@@ -12,53 +12,80 @@
 Servo botServo;
 Servo topServo;
 
+// const int botHome = 92;
+// const int topHome = 83;
+
+const int botHome = 83;
+const int topHome = 90;
+const int botOffset = 12;
+const int topOffset = 8;
+const int delayTime1 = 20;
+const int delayTime2 = 2000;
+const int botSpeed = 32;
+const int topSpeed = 15;
+int i = 0;
 
 
 void setup() {
-  botServo.attach(9);  
+  botServo.attach(9);
   topServo.attach(10);
-
+  botServo.write(botHome);  // HOME
+  topServo.write(topHome);  // HOME
 }
-const float botHome = 102.5;
-const int topHome = 97;
-const int offset = 7;
-const int delayTime1 = 100;
-const int delayTime2= 2500;
 
+void rotateServo(char servo, char dir) {
+
+  if ((servo == 'b') && (dir == 'u')) {
+    for (i = botHome; i < botHome + botOffset; i++) {
+      botServo.write(i);
+      delay(botSpeed);
+    }
+    delay(delayTime1);
+    for (i = botHome + botOffset; i > botHome; i--) {
+      botServo.write(i);
+      // delay(botSpeed);
+    }
+  } else if ((servo == 'b') && (dir == 'd')) {
+    for (i = botHome; i > botHome - botOffset; i--) {
+      botServo.write(i);
+      delay(botSpeed);
+    }
+    delay(delayTime1);
+    for (i = botHome - botOffset; i < botHome; i++) {
+      botServo.write(i);
+      // delay(botSpeed);
+    }
+  } else if ((servo == 't') && (dir == 'u')) {
+     for (i = topHome; i < topHome + topOffset; i++) {
+      topServo.write(i);
+      delay(topSpeed);
+    }
+    delay(delayTime1);
+    for (i = topHome + topOffset; i > topHome; i--) {
+      topServo.write(i);
+      delay(topSpeed);
+    }
+  } else if ((servo == 't') && (dir == 'd')) {
+    for (i = topHome; i > topHome - topOffset; i--) {
+      topServo.write(i);
+      delay(topSpeed);
+    }
+    delay(delayTime1);
+    for (i = topHome - topOffset; i < topHome; i++) {
+      topServo.write(i);
+      delay(topSpeed);
+    }
+  }
+}
 void loop() {
 
-  botServo.write(botHome); // HOME
-  topServo.write(topHome); // HOME
   
   delay(delayTime2);
-
-  // botServo.write(botHome-offset);
-
-  // delay(delayTime1);
-
-  // botServo.write(botHome); // HOME
-
-  // delay(delayTime2);
-
-  // botServo.write(botHome+offset);
-
-  // delay(delayTime1);
-
-  // botServo.write(botHome); // HOME
-
-  // delay(delayTime2);
-
-  topServo.write(topHome-offset);
-
-  delay(delayTime1);
-
-  topServo.write(topHome); // HOME
-
+  rotateServo('b', 'u');
   delay(delayTime2);
-
-  topServo.write(topHome+offset);
-
-  delay(delayTime1);
-
-  topServo.write(topHome);
+  rotateServo('b', 'd');
+  delay(delayTime2);
+  rotateServo('t', 'u');
+  delay(delayTime2);
+  rotateServo('t', 'd');
 }

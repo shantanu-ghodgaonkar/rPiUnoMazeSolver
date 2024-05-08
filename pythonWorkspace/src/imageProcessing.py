@@ -23,24 +23,68 @@ class ImageProcessing:
         """
         b, g, r = cv.split(self.img)  # Saved image is in RBG decomposing RGB
         # Merging RGB as BGR and eliminating G and B components
-        self.p_img = cv.merge((r, g*0, b*0))
-        self.p_img = cv.addWeighted(
-            self.p_img, 2, self.p_img, 0, 0)  # Increasing contrast
-        # Converting to grayscale
-        self.p_img = cv.cvtColor(self.p_img, cv.COLOR_BGR2GRAY)
-        # mask = cv.inRange(self.p_img, 100, 255);
+        self.p_img = cv.merge((r, g, b))  # Merging RGB as BGR
+
+        # Removing glare by masking near white with black
+        lo = np.array([50, 45, 45])
+        hi = np.array([130, 255, 255])
+        mask = cv.inRange(self.p_img, lo, hi)
+        self.p_img[mask > 0] = (0, 0, 0)
+        
+        # self.show_processed_img()
+
+        # Thresholding on red scale
+        lo = np.array([0, 0, 0])
+        hi = np.array([70, 255, 255])
+        mask = cv.inRange(self.p_img, lo, hi)
+        self.p_img[mask > 0] = (0, 0, 0)
+
+        # self.show_processed_img()
+
+
+        # Thresholding on red scale
+        b, g, r = cv.split(self.p_img)
+        lo = np.array([82, 0, 0])
+        hi = np.array([255, 30, 30])
+        mask = cv.inRange(self.p_img, lo, hi)
+        self.p_img[mask > 0] = (255, 0, 0)
+
+
+        b, g, r = cv.split(self.p_img)  # Saved image is in RBG decomposing RGB
+        # Merging RGB as BGR and eliminating G and B components
+        self.p_img = cv.merge((b, r*0, g*0))
+
+
+        self.p_img = cv.cvtColor(self.p_img, cv.COLOR_BGR2GRAY)  # Converting to grayscale
+        
+        # self.show_processed_img()
+
         # Thresholding image to convert to BW
-        _, self.p_img = cv.threshold(self.p_img, 20, 255, cv.THRESH_BINARY)
+        _, self.p_img = cv.threshold(self.p_img, 12, 255, cv.THRESH_BINARY)
+        
+        # self.show_processed_img()
 
-        kernel = np.ones((10, 10), np.uint8)  # Setting kernel for morphing
+
+
+        kernel = np.ones((3, 3), np.uint8)  # Setting kernel for morphing
         # Close morphing (Dilation followed by erosion eliminates black dots)
-        self.p_img = cv.morphologyEx(self.p_img, cv.MORPH_CLOSE, kernel)
-
-        kernel = cv.getStructuringElement(
-            cv.MORPH_ELLIPSE, (15, 15))  # Setting kernel for morphing
-        # kernel = np.ones((10,10),np.uint8) #Setting kernel for morphing
+        self.p_img = cv.morphologyEx(self.p_img, cv.MORPH_CLOSE, kernel, iterations=5)
         # Open morphing (Erosion followed by Dilation eliminates white dots)
-        self.p_img = cv.morphologyEx(self.p_img, cv.MORPH_OPEN, kernel)
+        self.p_img = cv.morphologyEx(self.p_img, cv.MORPH_OPEN, kernel, iterations=5)
+        
+        # self.show_processed_img()
+        
+        # self.p_img = cv.resize(self.p_img, (300, 300))  # resizing image
+        # Thresholding image to convert to BW
+        _, self.p_img = cv.threshold(self.p_img, 12, 255, cv.THRESH_BINARY)
+        kernel = np.ones((3, 3), np.uint8)  # Setting kernel for morphing
+        # Open morphing (Erosion followed by Dilation eliminates white dots)
+        self.p_img = cv.morphologyEx(self.p_img, cv.MORPH_OPEN, kernel, iterations=2)
+        
+        # self.show_processed_img()
+
+
+
 
     def detect_edges(self) -> None:
         """_summary_
@@ -176,3 +220,12 @@ class ImageProcessing:
         ignore_mask_color = (255,)*channel_count
         cv.fillPoly(mask, roi_corners, ignore_mask_color)
         self.img = cv.bitwise_and(self.img, mask)
+
+    def store_processed_image(self):
+        cv.imwrite(Path.joinpath(Path(__file__).parent.resolve(
+).parent.resolve(), 'img', 'maze_rpi_pic.jpg').__str__(), self.p_img)
+        
+    def get_maze_image(self, fx: float, fy: float):
+        return cv.resize(cv.imread(Path.joinpath(Path(__file__).parent.resolve(
+).parent.resolve(), 'img', 'maze_rpi_pic.jpg').__str__(), cv.IMREAD_GRAYSCALE), None, fx=fx,
+                               fy=fy, interpolation=cv.INTER_AREA)
