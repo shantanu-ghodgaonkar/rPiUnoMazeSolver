@@ -1,7 +1,7 @@
 import serial
 from time import sleep
 from pathlib import Path
-# from piCameraCtrl import Camera
+from piCameraCtrl import Camera
 from imageProcessing import ImageProcessing
 from ballDetector import BallDetector
 from time import time
@@ -14,7 +14,7 @@ BAUDRATE = 115200
 # IMAGEPATH = Path.joinpath(Path(__file__).parent.resolve(
 # ).parent.resolve(), 'img', 'maze_pic_1.jpg').__str__()
 IMAGEPATH = Path.joinpath(Path(__file__).parent.resolve(
-).parent.resolve(), 'img', 'capture1.jpg').__str__()
+).parent.resolve(), 'img', 'capture.jpg').__str__()
 MAZEIMGPATH = Path.joinpath(Path(__file__).parent.resolve(
 ).parent.resolve(), 'img', 'maze_rpi_pic.jpg').__str__()
 IMAGESCALEFACTOR = 0.25
@@ -26,9 +26,9 @@ directions = [Point(0, -1), Point(0, 1),
 
 if __name__ == "__main__":
     startTime = time()
-    # ser = serial.Serial(ARDUINO, BAUDRATE)
-    # camera = Camera()
-    # camera.cameraCapture()
+    ser = serial.Serial(ARDUINO, BAUDRATE)
+    camera = Camera()
+    camera.cameraCapture()
 
 
     imgProc = ImageProcessing(IMAGEPATH)
@@ -36,7 +36,7 @@ if __name__ == "__main__":
     # imgProc.irregular_quadrangle_crop_original_img(Point(408,11), Point(2088, 39), Point(2054, 1712), Point(404, 1666))
     imgProc.rotate_original_img(-2.25)  # : Capture1.jpg
     imgProc.crop_original_img(70, 1790, 480, 2200)  # : Capture1.jpg
-    # imgProc.show_original_img()
+    imgProc.show_original_img()
     # imgProc.rotate_original_img(-1.5)  # : testdata
     # imgProc.crop_original_img(75, 2010, 1501, 3466)  # : testdata
     ball = BallDetector(imgProc.get_original_img_array())
@@ -46,7 +46,7 @@ if __name__ == "__main__":
                     ball.get_start_point().y * IMAGESCALEFACTOR)
     imgProc.set_original_img(ball.get_image())
     imgProc.process_image()
-    # imgProc.show_processed_img()
+    imgProc.show_processed_img()
     imgProc.store_processed_image()
     imgProc.scale_processed_img(IMAGESCALEFACTOR, IMAGESCALEFACTOR)
     mazeSolver = MazeSolverBFS(start, imgProc.get_processed_img_array())
@@ -56,16 +56,8 @@ if __name__ == "__main__":
     print(f"Execution time = {time() - startTime}")
     path = mazeSolver.__getattribute__("path")
     mazeSolver.show_img()
-    diff = path[1] - path[0]
+    # diff = path[1] - path[0]
     
-    # if diff.x > 0:
-    #     ser.write('1'.encode('ascii'))
-    # elif diff.x < 0:
-    #     ser.write('2'.encode('ascii'))
-    # elif diff.y > 0:
-    #     ser.write('3'.encode('ascii'))
-    # elif diff.y < 0:
-    #     ser.write('4'.encode('ascii'))
     
     while ballDetected:
         imgProc = ImageProcessing(IMAGEPATH)
@@ -105,10 +97,10 @@ if __name__ == "__main__":
                         if (scaledMaze[cell.y][cell.x]==0):
                             print("Wall found")
                             wall = True
-                            # if d.y > 0:
-                            #     ser.write('3'.encode('ascii'))
-                            # elif d.y < 0:
-                            #     ser.write('4'.encode('ascii'))
+                            if d.y > 0:
+                                ser.write('4'.encode('ascii'))
+                            elif d.y < 0:
+                                ser.write('3'.encode('ascii'))
                             break
         
         elif diff.y == 0:
@@ -121,23 +113,23 @@ if __name__ == "__main__":
                         if (scaledMaze[cell.y][cell.x]==0):
                             print("Wall found")
                             wall = True
-                            # if d.x > 0:
-                            #     ser.write('1'.encode('ascii'))
-                            # elif d.x < 0:
-                            #     ser.write('2'.encode('ascii'))
+                            if d.x > 0:
+                                ser.write('2'.encode('ascii'))
+                            elif d.x < 0:
+                                ser.write('1'.encode('ascii'))
                             break
         
         if wall == False:
             print("No Walls")
             diff = path[1] - path[0]
-            # if diff.x > 0:
-            #     ser.write('5'.encode('ascii'))
-            # elif diff.x < 0:
-            #     ser.write('6'.encode('ascii'))
-            # elif diff.y > 0:
-            #     ser.write('7'.encode('ascii'))
-            # elif diff.y < 0:
-            #     ser.write('8'.encode('ascii'))
+            if diff.x > 0:
+                ser.write('6'.encode('ascii'))
+            elif diff.x < 0:
+                ser.write('5'.encode('ascii'))
+            elif diff.y > 0:
+                ser.write('7'.encode('ascii'))
+            elif diff.y < 0:
+                ser.write('8'.encode('ascii'))
 
     # mazeSolved = False
     # current = Point()
