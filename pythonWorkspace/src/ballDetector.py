@@ -1,6 +1,8 @@
 import cv2
 import numpy as np
 from point import Point
+from piCameraCtrl import Camera
+from pathlib import Path
 # import matplotlib.pyplot as plt
 
 
@@ -12,16 +14,22 @@ class BallDetector:
         self.rad = 0.0
 
     def detectBall(self) -> bool:
-        img_1 = cv2.addWeighted(self.img, 9, self.img, 0, 0)
-        b_s, g_s, r_s = cv2.split(img_1)
-        img_1 = cv2.merge((r_s*0, g_s, b_s))
+        b_s, g_s, r_s = cv2.split(self.img)
+        img_1 = cv2.merge((b_s, g_s, r_s))
+        # img_1 = cv2.addWeighted(img_1, 1, img_1, 0, 0)
+        lo = np.array([0, 40, 60])
+        hi = np.array([30, 180, 180])
+        mask = cv2.inRange(img_1, lo, hi)
+        img_1[mask > 0] = (255, 0, 0)
+        img_1[mask == 0] = (0, 255, 0)
         # self.show_img_2(img_1)
+        
         gray = cv2.cvtColor(img_1, cv2.COLOR_BGR2GRAY)  # Converting to grayscale
-        gray = cv2.blur(gray, (9, 9))  # Adding Gaussian blur
-
+        gray = cv2.blur(gray, (10, 10))  # Adding Gaussian blur
+        
         self.detected_circles = cv2.HoughCircles(gray,
-                                        cv2.HOUGH_GRADIENT, 1.9, 20, param1=60,
-                                        param2=60, minRadius=12, maxRadius=30)
+                                        cv2.HOUGH_GRADIENT, 1.7, 1200, param1=90,
+                                        param2=30, minRadius=10, maxRadius=40)
         if self.detected_circles is not None:
             return True
         else:
@@ -51,7 +59,7 @@ class BallDetector:
             self.detected_circles = np.uint16(np.around(self.detected_circles))
 
             for pt in self.detected_circles[0, :]:
-                a, b, r = pt[0], pt[1], pt[2]+5
+                a, b, r = pt[0], pt[1], pt[2]+8
                 self.start = Point(a, b)
                 self.rad = r
                 # Draw the circle.
@@ -79,3 +87,20 @@ class BallDetector:
         cv2.imshow("Captured Image for Ball Detection", temp_img)
         cv2.waitKey(0)
         cv2.destroyAllWindows()
+
+IMAGEPATH = Path.joinpath(Path(__file__).parent.resolve(
+).parent.resolve(), 'img', 'capture.jpg').__str__()
+
+if __name__ == "__main__":
+    cam = Camera()
+    cam.cameraCapture()
+    image = cv2.imread(IMAGEPATH, cv2.IMREAD_COLOR)
+    rows, cols, _ = image.shape
+    angle = -1
+    M = cv2.getRotationMatrix2D((((cols-1)/2.0), ((rows-1)/2.0)), angle, 1)
+    image = cv2.warpAffine(image, M, (cols, rows))
+    image = image[80:1795, 345:2045]
+    ball = BallDetector(image)
+    ball.detectBall()
+    ball.fillCircles()
+    ball.show_img()

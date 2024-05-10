@@ -50,20 +50,28 @@ class MazeSolverBFS:
                 endFound = True
                 self.end = Point(0, i + int(CELL_SIZE/2))
                 print(f"Gap found at = ({self.end.x}, {self.end.y})")
+                # self.directions = [Point(-1, 0), Point(1, 0),
+                #            Point(0, -1), Point(0, 1)]
                 break
             elif right_wall_white_px_count > GAP_THRESHOLD:
                 endFound = True
                 self.end = Point(self.img.shape[0]-1, i + int(CELL_SIZE/2))
+                # self.directions = [Point(1, 0), Point(-1, 0),
+                #            Point(0, -1), Point(0, 1)]
                 print(f"Gap found at = ({self.end.x}, {self.end.y})")
                 break
             elif up_wall_white_px_count > GAP_THRESHOLD:
                 endFound = True
                 self.end = Point(i + int(CELL_SIZE/2), 0)
+                # self.directions = [Point(0, -1), Point(0, 1),
+                #            Point(1, 0), Point(-1, 0)]
                 print(f"Gap found at = ({self.end.x}, {self.end.y})")
                 break
             elif down_wall_white_px_count > GAP_THRESHOLD:
                 endFound = True
                 self.end = Point(i + int(CELL_SIZE/2), self.img.shape[1]-1)
+                # self.directions = [Point(0, 1), Point(0, -1),
+                #            Point(1, 0), Point(-1, 0)]
                 print(f"Gap found at = ({self.end.x}, {self.end.y})")
                 break
             else:
@@ -73,6 +81,7 @@ class MazeSolverBFS:
             print(f"Gap not found, please recalibrate parameters")
 
     def solve_maze(self) -> list:
+
         self.img = cv2.cvtColor(self.img, cv2.COLOR_GRAY2BGR)
         while len(self.queue) > 0:
             # popping one element from queue and storing in p

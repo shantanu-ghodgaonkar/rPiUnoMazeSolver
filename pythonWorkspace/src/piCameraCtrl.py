@@ -10,8 +10,10 @@ IMAGEPATH = Path.joinpath(Path(__file__).parent.resolve(
 class Camera:
     def __init__(self) -> None:
         self.camera = camera = Picamera2()
-        self.camera.configure(camera.create_preview_configuration())
-        self.camera.set_controls({"ExposureTime": 60000, "AnalogueGain": 0.5})
+        # self.camera.configure(camera.create_preview_configuration())
+        config = self.camera.create_still_configuration({"size": (2592, 1944)})
+        self.camera.configure(config)
+        self.camera.set_controls({"ExposureTime": 80000, "AnalogueGain": 0.5})
         self.camera.start()
 
     def startPreview(self) -> None:
@@ -21,9 +23,9 @@ class Camera:
 
     def cameraCapture(self):
         # return self.camera.capture_image("capture")
-        config = self.camera.create_still_configuration({"size": (2592, 1944)})
-        self.camera.switch_mode_and_capture_file(config, IMAGEPATH)
-        # self.camera.capture_file(IMAGEPATH)
+        # config = self.camera.create_still_configuration({"size": (2592, 1944)})
+        # self.camera.switch_mode_and_capture_file(config, IMAGEPATH)
+        self.camera.capture_file(IMAGEPATH)
         # self.camera.stop()
 
     def getCamera(self) -> Picamera2:
