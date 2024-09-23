@@ -58,20 +58,21 @@ The system successfully detects the ball and navigates it through the maze using
 
 <table>
   <tr>
-    <td align="center">
+    <td align="center" width="300">
       <img src="https://github.com/shantanu-ghodgaonkar/rPiUnoMazeSolver/blob/e052fe15d5a39fba4fd2f3ebe7bfc404883de492/images/img_rpicam.png" alt="Image from RPi Camera" width="250" height="250"/><br>
       <b>Fig 1:</b> Image captured from RPi Camera
     </td>
-    <td align="center">
+    <td align="center" width="300">
       <img src="https://github.com/shantanu-ghodgaonkar/rPiUnoMazeSolver/blob/e052fe15d5a39fba4fd2f3ebe7bfc404883de492/images/ball_highlight.png" alt="Detected Ball" width="250" height="250"/><br>
       <b>Fig 2:</b> Image highlighting the detected ball
     </td>
-    <td align="center">
+    <td align="center" width="300">
       <img src="https://github.com/shantanu-ghodgaonkar/rPiUnoMazeSolver/blob/e052fe15d5a39fba4fd2f3ebe7bfc404883de492/images/solution_path.png" alt="Solution Path" width="250" height="250"/><br>
       <b>Fig 3:</b> Solution path determined by the BFS algorithm
     </td>
   </tr>
 </table>
+
 
 ## Future Enhancements
 
