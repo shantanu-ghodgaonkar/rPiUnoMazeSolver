@@ -56,17 +56,22 @@ The project involves connecting the Raspberry Pi, Arduino, camera module, and se
 
 The system successfully detects the ball and navigates it through the maze using the BFS algorithm. Below are the captured images showing different stages of the process:
 
-<p align="center">
-  <img src="https://github.com/shantanu-ghodgaonkar/rPiUnoMazeSolver/blob/e052fe15d5a39fba4fd2f3ebe7bfc404883de492/images/img_rpicam.png" alt="Image from RPi Camera" width="250"/>
-  <img src="https://github.com/shantanu-ghodgaonkar/rPiUnoMazeSolver/blob/e052fe15d5a39fba4fd2f3ebe7bfc404883de492/images/ball_highlight.png" alt="Detected Ball" width="250"/>
-  <img src="https://github.com/shantanu-ghodgaonkar/rPiUnoMazeSolver/blob/e052fe15d5a39fba4fd2f3ebe7bfc404883de492/images/solution_path.png" alt="Solution Path" width="250"/>
-</p>
-
-<p align="center">
-  <b>Fig 1:</b> Image captured from RPi Camera &nbsp;&nbsp;
-  <b>Fig 2:</b> Image highlighting the detected ball &nbsp;&nbsp;
-  <b>Fig 3:</b> Solution path determined by the BFS algorithm
-</p>
+<table>
+  <tr>
+    <td align="center">
+      <img src="https://github.com/shantanu-ghodgaonkar/rPiUnoMazeSolver/blob/e052fe15d5a39fba4fd2f3ebe7bfc404883de492/images/img_rpicam.png" alt="Image from RPi Camera" width="250" height="250"/><br>
+      <b>Fig 1:</b> Image captured from RPi Camera
+    </td>
+    <td align="center">
+      <img src="https://github.com/shantanu-ghodgaonkar/rPiUnoMazeSolver/blob/e052fe15d5a39fba4fd2f3ebe7bfc404883de492/images/ball_highlight.png" alt="Detected Ball" width="250" height="250"/><br>
+      <b>Fig 2:</b> Image highlighting the detected ball
+    </td>
+    <td align="center">
+      <img src="https://github.com/shantanu-ghodgaonkar/rPiUnoMazeSolver/blob/e052fe15d5a39fba4fd2f3ebe7bfc404883de492/images/solution_path.png" alt="Solution Path" width="250" height="250"/><br>
+      <b>Fig 3:</b> Solution path determined by the BFS algorithm
+    </td>
+  </tr>
+</table>
 
 ## Future Enhancements
 
