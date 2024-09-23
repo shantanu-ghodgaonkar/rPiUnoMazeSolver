@@ -48,9 +48,16 @@ The maze is represented as a graph where each cell is a vertex and passages betw
 
 ## Circuit Schematic
 
-The project involves connecting the Raspberry Pi, Arduino, camera module, and servo motors. The circuit schematic is illustrated below:
+The following schematic illustrates the connections between the Raspberry Pi, Arduino, camera module, and servo motors used to control the maze-solving robot:
 
-![Circuit Schematic](https://github.com/shantanu-ghodgaonkar/rPiUnoMazeSolver/blob/e052fe15d5a39fba4fd2f3ebe7bfc404883de492/images/ckt_schematic.png)
+<p align="center">
+  <img src="path-to-circuit-schematic.png" alt="Circuit Schematic" width="400" height="400"/>
+</p>
+
+<p align="center">
+  <b>Fig 1:</b> Circuit schematic showing the connections between Raspberry Pi, Arduino, camera, and servos.
+</p>
+
 
 ## Results
 
