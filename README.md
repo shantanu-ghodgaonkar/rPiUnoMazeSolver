@@ -46,14 +46,20 @@ The maze is represented as a graph where each cell is a vertex and passages betw
 - Based on the relative position of the ball, the Raspberry Pi sends movement instructions to the **Arduino**.
 - The **Arduino** then controls the servos to manipulate the ball according to the instructions.
 
+## Circuit Schematic
+
+The project involves connecting the Raspberry Pi, Arduino, camera module, and servo motors. The circuit schematic is illustrated below:
+
+![Circuit Schematic](https://github.com/shantanu-ghodgaonkar/rPiUnoMazeSolver/blob/e052fe15d5a39fba4fd2f3ebe7bfc404883de492/images/ckt_schematic.png)
+
 ## Results
 
 - The system successfully detects the ball and navigates it through the maze using BFS.
 - The following images show the detected ball, solution path, and maze layout:
 
-![Image from RPi Camera](path-to-camera-image.png)
-![Detected Ball](path-to-ball-image.png)
-![Solution Path](path-to-bfs-solution-image.png)
+![Image from RPi Camera](https://github.com/shantanu-ghodgaonkar/rPiUnoMazeSolver/blob/e052fe15d5a39fba4fd2f3ebe7bfc404883de492/images/img_rpicam.png)
+![Detected Ball](https://github.com/shantanu-ghodgaonkar/rPiUnoMazeSolver/blob/e052fe15d5a39fba4fd2f3ebe7bfc404883de492/images/ball_highlight.png)
+![Solution Path](https://github.com/shantanu-ghodgaonkar/rPiUnoMazeSolver/blob/e052fe15d5a39fba4fd2f3ebe7bfc404883de492/images/solution_path.png)
 
 ## Future Enhancements
 
